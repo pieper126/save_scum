@@ -9,6 +9,8 @@ jobs:
   release:
     name: Publish GitHub Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
@@ -48,3 +50,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: saveWatcher*
+          token: ${{ secrets.GITHUB_TOKEN }}
