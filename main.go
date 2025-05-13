@@ -4,10 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"os/signal"
 	"strconv"
 	"strings"
-	"syscall"
 
 	"eu4_save_scum.com/saver/internal"
 	"github.com/c-bata/go-prompt"
@@ -64,12 +62,6 @@ func main() {
 	filtersEvents := internal.BuildEu4Filter().Filter(watcher.Watch())
 
 	saver.StartBackUp(filtersEvents)
-
-	sigs := make(chan os.Signal, 1)
-
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-
-	fmt.Println("Waiting for signal (press Ctrl+C to exit)...")
 
 	for {
 		t := prompt.Input(">", completer(saver))
