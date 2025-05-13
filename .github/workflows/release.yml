@@ -1,0 +1,52 @@
+name: Release Go Application
+
+on:
+  push:
+    tags:
+      - 'v*'  # Only trigger on version tags like v1.0.0
+
+jobs:
+  release:
+    name: Publish GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'  # Set your desired Go version
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Build windows binary
+        run: GOOS=windows GOARCH=amd64 go build -o saveWatcher_amd64.exe main.go
+
+      - name: Build macOs arm binary
+        run: GOOS=darwin GOARCH=arm64 go build -o saveWatcher_arm64_mac main.go
+
+      - name: Build macOs arm binary
+        run: GOOS=darwin GOARCH=amd64 go build -o saveWatcher_amd64_mac main.go
+
+      - name: Build linux binary
+        run: GOOS=linux GOARCH=amd64 go build -o saveWatcher_amd64_linux main.go
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: saveWatcher*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

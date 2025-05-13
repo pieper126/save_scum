@@ -35,20 +35,4 @@ jobs:
       - name: Run tests
         run: go test -v ./...
 
-      - name: Build windows binary
-        run: GOOS=windows GOARCH=amd64 go build -o saveWatcher_amd64.exe main.go
-
-      - name: Build macOs arm binary
-        run: GOOS=darwin GOARCH=arm64 go build -o saveWatcher_arm64_mac main.go
-
-      - name: Build macOs arm binary
-        run: GOOS=darwin GOARCH=amd64 go build -o saveWatcher_amd64_mac main.go
-
-      - name: Build linux binary
-        run: GOOS=linux GOARCH=amd64 go build -o saveWatcher_amd64_linux main.go
-      
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: saveWatcher*
       
