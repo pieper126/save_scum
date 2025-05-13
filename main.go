@@ -25,19 +25,13 @@ func main() {
 
 	cfg, err := internal.LoadConfig("./config.json")
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println("press any key!")
-		reader := bufio.NewReader(os.Stdin)
-		reader.ReadString('\n')
+		handleUnrecoverableError(err)
 		return
 	}
 
 	err = cfg.Validate()
 	if err != nil {
-		fmt.Println("%w", err)
-		fmt.Println("press any key!")
-		reader := bufio.NewReader(os.Stdin)
-		reader.ReadString('\n')
+		handleUnrecoverableError(err)
 		return
 	}
 
@@ -45,9 +39,7 @@ func main() {
 
 	saver, err := internal.BuildSaver(cfg)
 	if err != nil {
-		fmt.Println("press any key!")
-		reader := bufio.NewReader(os.Stdin)
-		reader.ReadString('\n')
+		handleUnrecoverableError(err)
 		fmt.Println(err)
 	}
 
@@ -155,4 +147,11 @@ func completer(saver *internal.Saver) func(prompt.Document) []prompt.Suggest {
 
 		return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
 	}
+}
+
+func handleUnrecoverableError(err error) {
+	fmt.Println("%w", err)
+	fmt.Println("press any key!")
+	reader := bufio.NewReader(os.Stdin)
+	reader.ReadString('\n')
 }
