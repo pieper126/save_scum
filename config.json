@@ -1,0 +1,4 @@
+{
+    "readFrom": "./test/read",
+    "saveTo": "./test/save"
+}
